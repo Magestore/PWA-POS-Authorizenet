@@ -8,9 +8,9 @@
 namespace Magestore\WebposAuthorizenet\Model;
 
 use Magento\Framework\Exception\StateException;
-use \net\authorize\api\contract\v1 AS apiContract;
-use \net\authorize\api\controller AS apiController;
-use \net\authorize\api\constants AS apiConstants;
+use \net\authorize\api\contract\v1 as apiContract;
+use \net\authorize\api\controller as apiController;
+use \net\authorize\api\constants as apiConstants;
 
 /**
  * Class Authorizenet
@@ -46,7 +46,8 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
     /**
      * @return bool
      */
-    public function validateRequiredSDK(){
+    public function validateRequiredSDK()
+    {
         return (class_exists("\\net\\authorize\\api\\contract\\v1\\MerchantAuthenticationType"))?true:false;
     }
 
@@ -54,7 +55,8 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
      * @param string $key
      * @return array
      */
-    public function getConfig($key = ''){
+    public function getConfig($key = '')
+    {
         $configs = $this->helper->getAuthorizenetConfig();
         return ($key)?$configs[$key]:$configs;
     }
@@ -77,7 +79,8 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
      * @return string
      * @throws \Exception
      */
-    public function completePayment($token, $amount){
+    public function completePayment($token, $amount)
+    {
         /* Create a merchantAuthenticationType object with authentication details
        retrieved from the constants file */
         $merchantAuthentication = new apiContract\MerchantAuthenticationType();
@@ -105,7 +108,7 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
         $duplicateWindowSetting->setSettingValue("600");
         // Create a transactionRequestType object and add the previous objects to it
         $type = 'authOnlyTransaction';
-        if($this->getConfig('payment_action') == \Magento\Authorizenet\Model\Authorizenet::ACTION_AUTHORIZE_CAPTURE) {
+        if ($this->getConfig('payment_action') == \Magento\Authorizenet\Model\Authorizenet::ACTION_AUTHORIZE_CAPTURE) {
             $type = 'authCaptureTransaction';
         }
         $transactionRequestType = new apiContract\TransactionRequestType();
@@ -121,7 +124,7 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
         $request->setTransactionRequest($transactionRequestType);
         // Create the controller and get the response
         $controller = new apiController\CreateTransactionController($request);
-        if($this->getConfig('is_sandbox')) {
+        if ($this->getConfig('is_sandbox')) {
             $apiUrl = apiConstants\ANetEnvironment::SANDBOX;
         } else {
             $apiUrl = apiConstants\ANetEnvironment::PRODUCTION;
@@ -138,8 +141,8 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
                 if ($tresponse != null && $tresponse->getMessages() != null) {
                     $result = $tresponse->getTransId();
                 } else {
-                    if($tresponse != null && $tresponse->getErrors() != null) {
-                        if($tresponse->getErrors()[0]->getErrorCode() == 'E00007') {
+                    if ($tresponse != null && $tresponse->getErrors() != null) {
+                        if ($tresponse->getErrors()[0]->getErrorCode() == 'E00007') {
                             throw new StateException(__('Connection failed. Please contact admin to check the configuration of API.'));
                         }
                     }
@@ -148,12 +151,12 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
                 // Or, print errors if the API request wasn't successful
             } else {
                 $tresponse = $response->getTransactionResponse();
-                if($tresponse != null && $tresponse->getErrors() != null) {
-                    if($tresponse->getErrors()[0]->getErrorCode() == 'E00007') {
+                if ($tresponse != null && $tresponse->getErrors() != null) {
+                    if ($tresponse->getErrors()[0]->getErrorCode() == 'E00007') {
                         throw new StateException(__('Connection failed. Please contact admin to check the configuration of API.'));
                     }
-                } else if ($response != null && $response->getMessages() != null) {
-                    if($response->getMessages()->getMessage()[0]->getCode() == 'E00003') {
+                } elseif ($response != null && $response->getMessages() != null) {
+                    if ($response->getMessages()->getMessage()[0]->getCode() == 'E00003') {
                         throw new StateException(__('Connection failed. Please contact admin to check the configuration of API.'));
                     }
                 }
@@ -171,8 +174,9 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
      * @return bool
      * @throws \Exception
      */
-    public function canConnectToApi(){
-        if($this->testCreate()) {
+    public function canConnectToApi()
+    {
+        if ($this->testCreate()) {
             return true;
         }
         return false;
@@ -247,8 +251,8 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
                     if ($tresponse != null && $tresponse->getMessages() != null) {
                         return true;
                     } else {
-                        if($tresponse != null && $tresponse->getErrors() != null) {
-                            if($tresponse->getErrors()[0]->getErrorCode() == 'E00007') {
+                        if ($tresponse != null && $tresponse->getErrors() != null) {
+                            if ($tresponse->getErrors()[0]->getErrorCode() == 'E00007') {
                                 throw new StateException(__('Connection failed. Please contact admin to check the configuration of API.'));
                             }
                         }
@@ -256,8 +260,8 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
                     }
                 } else {
                     $tresponse = $response->getTransactionResponse();
-                    if($tresponse != null && $tresponse->getErrors() != null) {
-                        if($tresponse->getErrors()[0]->getErrorCode() == 'E00007') {
+                    if ($tresponse != null && $tresponse->getErrors() != null) {
+                        if ($tresponse->getErrors()[0]->getErrorCode() == 'E00007') {
                             throw new StateException(__('Connection failed. Please contact admin to check the configuration of API.'));
                         }
                     }
@@ -265,7 +269,7 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
                 }
             }
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
     }

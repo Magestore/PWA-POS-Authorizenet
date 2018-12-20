@@ -19,17 +19,19 @@ class Authorizenet extends \Magestore\Webpos\Block\AbstractBlock
     {
         /** @var \Magestore\WebposAuthorizenet\Helper\Data $helper */
         $helper = $this->_objectManager->get('Magestore\WebposAuthorizenet\Helper\Data');
-        if ($helper->isEnableAuthorizenet())
+        if ($helper->isEnableAuthorizenet()) {
             return parent::toHtml();
+        }
         return '';
     }
 
     /**
      * Check authorizenet is sandbox mode or production mode
-     * 
+     *
      * @return boolean
      */
-    public function isSandbox(){
+    public function isSandbox()
+    {
         /** @var \Magestore\WebposAuthorizenet\Helper\Data $helper */
         $helper = $this->_objectManager->get('Magestore\WebposAuthorizenet\Helper\Data');
         return $helper->getStoreConfig('webpos/payment/authorizenet/is_sandbox');

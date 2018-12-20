@@ -33,5 +33,4 @@ interface AuthorizenetServiceInterface
      * @return string
      */
     public function finishPayment($token, $amount);
-
 }

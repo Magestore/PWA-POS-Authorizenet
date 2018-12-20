@@ -27,7 +27,8 @@ class AuthorizenetService implements \Magestore\WebposAuthorizenet\Api\Authorize
     /**
      * @return bool
      */
-    public function isEnable(){
+    public function isEnable()
+    {
         $hasSDK = $this->authorizenet->validateRequiredSDK();
         $configs = $this->authorizenet->getConfig();
         return ($hasSDK && $configs['enable'] && !empty($configs['transaction_key']) && !empty($configs['api_login']))?true:false;
@@ -36,18 +37,19 @@ class AuthorizenetService implements \Magestore\WebposAuthorizenet\Api\Authorize
     /**
      * @return string
      */
-    public function getConfigurationError(){
+    public function getConfigurationError()
+    {
         $message = '';
         $hasSDK = $this->authorizenet->validateRequiredSDK();
         $configs = $this->authorizenet->getConfig();
-        if(!$hasSDK){
+        if (!$hasSDK) {
             $message = __('Authorizenet SDK not found, please go to the configuration to get the instruction to install the SDK');
-        }else{
-            if($configs['enable']){
-                if(empty($configs['transaction_key']) || empty($configs['api_login'])){
+        } else {
+            if ($configs['enable']) {
+                if (empty($configs['transaction_key']) || empty($configs['api_login'])) {
                     $message = __('Authorizenet application client id and client secret are required');
                 }
-            }else{
+            } else {
                 $message = __('Authorizenet integration is disabled');
             }
         }
@@ -60,14 +62,16 @@ class AuthorizenetService implements \Magestore\WebposAuthorizenet\Api\Authorize
      * @return string
      * @throws \Exception
      */
-    public function finishPayment($token, $amount){
+    public function finishPayment($token, $amount)
+    {
         return $this->authorizenet->completePayment($token, $amount);
     }
 
     /**
      * @return bool
      */
-    public function canConnectToApi(){
+    public function canConnectToApi()
+    {
         return $this->authorizenet->canConnectToApi();
     }
 }

@@ -29,7 +29,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
         \Magento\Store\Model\StoreManagerInterface $storeManager
-    ){
+    ) {
         $this->_storeManager = $storeManager;
         $this->_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         parent::__construct($context);
@@ -40,7 +40,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      *
      * @return \Magento\Store\Api\Data\StoreInterface
      */
-    public function getStore(){
+    public function getStore()
+    {
         return $this->_storeManager->getStore();
     }
 
@@ -50,7 +51,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @param string $path
      * @return string
      */
-    public function getStoreConfig($path){
+    public function getStoreConfig($path)
+    {
         return $this->scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
@@ -60,23 +62,25 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @params string $class
      * @return mixed
      */
-    public function getModel($class){
+    public function getModel($class)
+    {
         return $this->_objectManager->get($class);
     }
 
     /**
      * @return array
      */
-    public function getAuthorizenetConfig() {
-        $configData = array();
-        $configItems = array(
+    public function getAuthorizenetConfig()
+    {
+        $configData = [];
+        $configItems = [
             'enable',
             'sort_order',
             'transaction_key',
             'api_login',
             'payment_action',
             'is_sandbox'
-        );
+        ];
         foreach ($configItems as $configItem) {
             $configData[$configItem] = $this->getStoreConfig('webpos/payment/authorizenet/' . $configItem);
         }
@@ -86,10 +90,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * @return bool
      */
-    public function isEnableAuthorizenet(){
+    public function isEnableAuthorizenet()
+    {
         $enable = $this->getStoreConfig('webpos/payment/authorizenet/enable');
         return ($enable == 1)?true:false;
     }
-
-
 }

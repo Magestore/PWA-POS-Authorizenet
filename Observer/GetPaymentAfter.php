@@ -26,7 +26,7 @@ class GetPaymentAfter implements ObserverInterface
         $payments = $observer->getData('payments');
         $paymentList = $payments->getList();
         $isAuthorizenetEnable = $authorizenetHelper->isEnableAuthorizenet();
-        if($isAuthorizenetEnable) {
+        if ($isAuthorizenetEnable) {
             $authorizenetPayment = $this->addWebposAuthorizenet();
             $paymentList[] = $authorizenetPayment->getData();
         }

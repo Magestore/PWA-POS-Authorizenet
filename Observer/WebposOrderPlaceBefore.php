@@ -33,8 +33,7 @@ class WebposOrderPlaceBefore implements ObserverInterface
     public function __construct(
         \Magestore\WebposAuthorizenet\Api\AuthorizenetServiceInterface $authorizenetService,
         \Magestore\Webpos\Helper\Payment $paymentHelper
-    )
-    {
+    ) {
         $this->authorizenetService = $authorizenetService;
         $this->paymentHelper = $paymentHelper;
     }
@@ -46,15 +45,19 @@ class WebposOrderPlaceBefore implements ObserverInterface
     public function execute(EventObserver $observer)
     {
         $order = $observer->getData('order');
-        if (!$order)
+        if (!$order) {
             return $this;
+        }
         $quoteId = $order->getQuoteId();
-        if (!$payment = $order->getPayment())
+        if (!$payment = $order->getPayment()) {
             return $this;
-        if (!$methodData = $payment->getMethodData())
+        }
+        if (!$methodData = $payment->getMethodData()) {
             return $this;
-        if (!is_array($methodData))
+        }
+        if (!is_array($methodData)) {
             return $this;
+        }
         foreach ($methodData as $paymentItem) {
             if ($paymentItem->getCode() == 'authorizenet_integration') {
                 foreach ($paymentItem->getAdditionalData() as $key => $value) {
